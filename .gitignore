@@ -1,3 +1,5 @@
+secrets.yaml
+*.backup
 *~
 
 # Prerequisites
@@ -34,3 +36,4 @@
 *.app
 
 *.pyc
+.esphome

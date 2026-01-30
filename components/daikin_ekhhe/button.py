@@ -32,7 +32,9 @@ async def to_code(config):
         conf = config[DAIKIN_SAVE_CC_SNAPSHOT]
         var = cg.new_Pvariable(
             conf[CONF_ID],
-            cg.RawExpression("esphome::daikin_ekkhe::DaikinEkhheDebugButton::Action::SAVE_SNAPSHOT"),
+            cg.RawExpression(
+                "esphome::daikin_ekkhe::DaikinEkhheDebugButton::Action::SAVE_SNAPSHOT"
+            ),
         )
         await button.register_button(var, conf)
         cg.add(var.set_parent(hub))
@@ -41,7 +43,9 @@ async def to_code(config):
         conf = config[DAIKIN_RESTORE_CC_SNAPSHOT]
         var = cg.new_Pvariable(
             conf[CONF_ID],
-            cg.RawExpression("esphome::daikin_ekkhe::DaikinEkhheDebugButton::Action::RESTORE_SNAPSHOT"),
+            cg.RawExpression(
+                "esphome::daikin_ekkhe::DaikinEkhheDebugButton::Action::RESTORE_SNAPSHOT"
+            ),
         )
         await button.register_button(var, conf)
         cg.add(var.set_parent(hub))

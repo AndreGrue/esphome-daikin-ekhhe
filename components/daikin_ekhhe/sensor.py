@@ -16,13 +16,10 @@ from esphome.const import (
     STATE_CLASS_MEASUREMENT,
     STATE_CLASS_TOTAL_INCREASING,
     ENTITY_CATEGORY_DIAGNOSTIC,
-    ENTITY_CATEGORY_NONE
+    ENTITY_CATEGORY_NONE,
 )
 
-from . import (
-    CONF_EKHHE_ID,
-    DaikinEkhhe
-)
+from . import CONF_EKHHE_ID, DaikinEkhhe
 
 from .const import *
 
@@ -53,145 +50,143 @@ DEBUG_TYPES = [
     CYCLE_OVER_BUDGET_TOTAL,
 ]
 
-CONFIG_SCHEMA = (
-    cv.Schema(
-        {
-            cv.GenerateID(CONF_EKHHE_ID): cv.use_id(DaikinEkhhe),
-            cv.Optional(A_LOW_WAT_T_PROBE): sensor.sensor_schema(
-                unit_of_measurement=UNIT_CELSIUS,
-                accuracy_decimals=0,
-                device_class=DEVICE_CLASS_TEMPERATURE,
-                state_class=STATE_CLASS_MEASUREMENT,
-                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,  		
-            ),
-            cv.Optional(B_UP_WAT_T_PROBE): sensor.sensor_schema(
-                unit_of_measurement=UNIT_CELSIUS,
-                accuracy_decimals=0,
-                device_class=DEVICE_CLASS_TEMPERATURE,
-                state_class=STATE_CLASS_MEASUREMENT,
-                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,  		
-            ),
-            cv.Optional(C_DEFROST_T_PROBE): sensor.sensor_schema(
-                unit_of_measurement=UNIT_CELSIUS,
-                accuracy_decimals=0,
-                device_class=DEVICE_CLASS_TEMPERATURE,
-                state_class=STATE_CLASS_MEASUREMENT,
-                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,  		
-            ),
-                cv.Optional(D_SUPPLY_AIR_T_PROBE): sensor.sensor_schema(
-                unit_of_measurement=UNIT_CELSIUS,
-                accuracy_decimals=0,
-                device_class=DEVICE_CLASS_TEMPERATURE,
-                state_class=STATE_CLASS_MEASUREMENT,
-                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,  		
-            ),
-            cv.Optional(E_EVA_INLET_T_PROBE): sensor.sensor_schema(
-                unit_of_measurement=UNIT_CELSIUS,
-                accuracy_decimals=0,
-                device_class=DEVICE_CLASS_TEMPERATURE,
-                state_class=STATE_CLASS_MEASUREMENT,
-                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,  		
-            ),
-            cv.Optional(F_EVA_OUTLET_T_PROBE): sensor.sensor_schema(
-                unit_of_measurement=UNIT_CELSIUS,
-                accuracy_decimals=0,
-                device_class=DEVICE_CLASS_TEMPERATURE,
-                state_class=STATE_CLASS_MEASUREMENT,
-                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,  		
-            ),
-            cv.Optional(G_COMP_GAS_T_PROBE): sensor.sensor_schema(
-                unit_of_measurement=UNIT_CELSIUS,
-                accuracy_decimals=0,
-                device_class=DEVICE_CLASS_TEMPERATURE,
-                state_class=STATE_CLASS_MEASUREMENT,
-                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,  		
-            ),
-            cv.Optional(H_SOLAR_T_PROBE): sensor.sensor_schema(
-                unit_of_measurement=UNIT_CELSIUS,
-                accuracy_decimals=0,
-                device_class=DEVICE_CLASS_TEMPERATURE,
-                state_class=STATE_CLASS_MEASUREMENT,
-                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,  		
-            ),
-            cv.Optional(I_EEV_STEP): sensor.sensor_schema(
-                unit_of_measurement=UNIT_EMPTY,
-                accuracy_decimals=0,
-                #device_class=DEVICE_CLASS_NONE,
-                state_class=STATE_CLASS_MEASUREMENT,
-                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,  		
-            ),
-            cv.Optional(J_POWER_FW_VERSION): sensor.sensor_schema(
-                unit_of_measurement=UNIT_EMPTY,
-                accuracy_decimals=0,
-                #device_class=DEVICE_CLASS_NONE,
-                state_class=STATE_CLASS_MEASUREMENT,
-                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,  		
-            ),
-            cv.Optional(L_UI_FW_VERSION): sensor.sensor_schema(
-                unit_of_measurement=UNIT_EMPTY,
-                accuracy_decimals=0,
-                #device_class=DEVICE_CLASS_NONE,
-                state_class=STATE_CLASS_MEASUREMENT,
-                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,  		
-            ),
-            cv.Optional(FRAMES_CAPTURED_TOTAL): sensor.sensor_schema(
-                unit_of_measurement=UNIT_EMPTY,
-                accuracy_decimals=0,
-                state_class=STATE_CLASS_TOTAL_INCREASING,
-                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            ),
-            cv.Optional(FRAMES_DROPPED_TOTAL): sensor.sensor_schema(
-                unit_of_measurement=UNIT_EMPTY,
-                accuracy_decimals=0,
-                state_class=STATE_CLASS_TOTAL_INCREASING,
-                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            ),
-            cv.Optional(FRAMES_TRUNCATED_TOTAL): sensor.sensor_schema(
-                unit_of_measurement=UNIT_EMPTY,
-                accuracy_decimals=0,
-                state_class=STATE_CLASS_TOTAL_INCREASING,
-                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            ),
-            cv.Optional(CRC_ERRORS_TOTAL): sensor.sensor_schema(
-                unit_of_measurement=UNIT_EMPTY,
-                accuracy_decimals=0,
-                state_class=STATE_CLASS_TOTAL_INCREASING,
-                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            ),
-            cv.Optional(FRAMING_ERRORS_TOTAL): sensor.sensor_schema(
-                unit_of_measurement=UNIT_EMPTY,
-                accuracy_decimals=0,
-                state_class=STATE_CLASS_TOTAL_INCREASING,
-                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            ),
-            cv.Optional(BYTES_CAPTURED_TOTAL): sensor.sensor_schema(
-                unit_of_measurement=UNIT_EMPTY,
-                accuracy_decimals=0,
-                state_class=STATE_CLASS_TOTAL_INCREASING,
-                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            ),
-            cv.Optional(CYCLE_PARSE_TIME_MS): sensor.sensor_schema(
-                unit_of_measurement=UNIT_MILLISECOND,
-                accuracy_decimals=0,
-                device_class=DEVICE_CLASS_DURATION,
-                state_class=STATE_CLASS_MEASUREMENT,
-                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            ),
-            cv.Optional(CYCLE_TOTAL_TIME_MS): sensor.sensor_schema(
-                unit_of_measurement=UNIT_MILLISECOND,
-                accuracy_decimals=0,
-                device_class=DEVICE_CLASS_DURATION,
-                state_class=STATE_CLASS_MEASUREMENT,
-                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            ),
-            cv.Optional(CYCLE_OVER_BUDGET_TOTAL): sensor.sensor_schema(
-                unit_of_measurement=UNIT_EMPTY,
-                accuracy_decimals=0,
-                state_class=STATE_CLASS_TOTAL_INCREASING,
-                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-            ),
-        }
-    )
+CONFIG_SCHEMA = cv.Schema(
+    {
+        cv.GenerateID(CONF_EKHHE_ID): cv.use_id(DaikinEkhhe),
+        cv.Optional(A_LOW_WAT_T_PROBE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_CELSIUS,
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_TEMPERATURE,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(B_UP_WAT_T_PROBE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_CELSIUS,
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_TEMPERATURE,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(C_DEFROST_T_PROBE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_CELSIUS,
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_TEMPERATURE,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(D_SUPPLY_AIR_T_PROBE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_CELSIUS,
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_TEMPERATURE,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(E_EVA_INLET_T_PROBE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_CELSIUS,
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_TEMPERATURE,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(F_EVA_OUTLET_T_PROBE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_CELSIUS,
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_TEMPERATURE,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(G_COMP_GAS_T_PROBE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_CELSIUS,
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_TEMPERATURE,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(H_SOLAR_T_PROBE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_CELSIUS,
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_TEMPERATURE,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(I_EEV_STEP): sensor.sensor_schema(
+            unit_of_measurement=UNIT_EMPTY,
+            accuracy_decimals=0,
+            # device_class=DEVICE_CLASS_NONE,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(J_POWER_FW_VERSION): sensor.sensor_schema(
+            unit_of_measurement=UNIT_EMPTY,
+            accuracy_decimals=0,
+            # device_class=DEVICE_CLASS_NONE,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(L_UI_FW_VERSION): sensor.sensor_schema(
+            unit_of_measurement=UNIT_EMPTY,
+            accuracy_decimals=0,
+            # device_class=DEVICE_CLASS_NONE,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(FRAMES_CAPTURED_TOTAL): sensor.sensor_schema(
+            unit_of_measurement=UNIT_EMPTY,
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_TOTAL_INCREASING,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(FRAMES_DROPPED_TOTAL): sensor.sensor_schema(
+            unit_of_measurement=UNIT_EMPTY,
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_TOTAL_INCREASING,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(FRAMES_TRUNCATED_TOTAL): sensor.sensor_schema(
+            unit_of_measurement=UNIT_EMPTY,
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_TOTAL_INCREASING,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CRC_ERRORS_TOTAL): sensor.sensor_schema(
+            unit_of_measurement=UNIT_EMPTY,
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_TOTAL_INCREASING,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(FRAMING_ERRORS_TOTAL): sensor.sensor_schema(
+            unit_of_measurement=UNIT_EMPTY,
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_TOTAL_INCREASING,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(BYTES_CAPTURED_TOTAL): sensor.sensor_schema(
+            unit_of_measurement=UNIT_EMPTY,
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_TOTAL_INCREASING,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CYCLE_PARSE_TIME_MS): sensor.sensor_schema(
+            unit_of_measurement=UNIT_MILLISECOND,
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_DURATION,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CYCLE_TOTAL_TIME_MS): sensor.sensor_schema(
+            unit_of_measurement=UNIT_MILLISECOND,
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_DURATION,
+            state_class=STATE_CLASS_MEASUREMENT,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+        cv.Optional(CYCLE_OVER_BUDGET_TOTAL): sensor.sensor_schema(
+            unit_of_measurement=UNIT_EMPTY,
+            accuracy_decimals=0,
+            state_class=STATE_CLASS_TOTAL_INCREASING,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+        ),
+    }
 )
 
 
@@ -201,7 +196,7 @@ async def setup_conf(config, key, hub):
 
         sens = await sensor.new_sensor(conf)
         cg.add(hub.register_sensor(key, sens))
-        #cg.add(getattr(hub, f"register_sensor")(cg.RawExpression("EKHHE::" + key), sens))
+        # cg.add(getattr(hub, f"register_sensor")(cg.RawExpression("EKHHE::" + key), sens))
 
 
 async def to_code(config):

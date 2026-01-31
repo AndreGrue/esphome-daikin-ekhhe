@@ -17,7 +17,7 @@
 #include <type_traits>
 
 #ifndef DAIKIN_EKHHE_DEBUG
-#  define DAIKIN_EKHHE_DEBUG 0
+#  define DAIKIN_EKHHE_DEBUG 1
 #endif
 
 namespace esphome {

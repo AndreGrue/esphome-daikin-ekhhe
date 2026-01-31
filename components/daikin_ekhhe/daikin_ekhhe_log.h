@@ -3,7 +3,7 @@
 #include "esphome/core/log.h"
 
 #ifndef DAIKIN_EKHHE_DEBUG
-#  define DAIKIN_EKHHE_DEBUG 0
+#  define DAIKIN_EKHHE_DEBUG 1
 #endif
 
 #if DAIKIN_EKHHE_DEBUG

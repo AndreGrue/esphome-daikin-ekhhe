@@ -1943,17 +1943,22 @@ void DaikinEkhheComponent::send_uart_cc_command(uint8_t index,
 
   /*
   // Wait for RX to be idle before sending TX and if not, retry
-  unsigned
-long now = millis();
-  unsigned long time_since_last_rx = now - last_rx_time_;
 
-  if (time_since_last_rx < 50) {  // If RX is active, wait 50ms until it's
+unsigned
+long now = millis();
+  unsigned long time_since_last_rx = now -
+last_rx_time_; 
+  if (time_since_last_rx < 50) {  // If RX is active, wait 50ms
+until it's
 idle
       ESP_LOGI(TAG, "RX is still active, deferring TX...");
- set_timeout(50
+
+set_timeout(50
 - time_since_last_rx, [this, index, value, bit_position]()
-  {
-send_uart_cc_command(index, value, bit_position);  // Retry after a short
+
+{
+send_uart_cc_command(index, value, bit_position);  // Retry after a
+short
 
 delay
       });

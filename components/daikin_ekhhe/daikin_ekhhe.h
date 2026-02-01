@@ -1,24 +1,30 @@
+
 #pragma once
 
-#include "daikin_ekhhe_const.h"
-#include "esphome/components/binary_sensor/binary_sensor.h"
-#include "esphome/components/button/button.h"
-#include "esphome/components/number/number.h"
-#include "esphome/components/select/select.h"
-#include "esphome/components/sensor/sensor.h"
-#include "esphome/components/switch/switch.h"
-#include "esphome/components/text_sensor/text_sensor.h"
-#include "esphome/components/time/real_time_clock.h"
-#include "esphome/components/uart/uart.h"
-#include "esphome/core/component.h"
+#ifndef DAIKIN_EKHHE_DEBUG
+#define DAIKIN_EKHHE_DEBUG 0
+#endif
 
-#include <map>
 #include <string>
+#include <map>
 #include <type_traits>
 
-#ifndef DAIKIN_EKHHE_DEBUG
-#  define DAIKIN_EKHHE_DEBUG 1
+#include "esphome/core/component.h"
+#include "esphome/components/sensor/sensor.h"
+#include "esphome/components/binary_sensor/binary_sensor.h"
+#include "esphome/components/number/number.h"
+#include "esphome/components/select/select.h"
+#if DAIKIN_EKHHE_DEBUG && defined(USE_SWITCH)
+#include "esphome/components/switch/switch.h"
 #endif
+#if DAIKIN_EKHHE_DEBUG && defined(USE_BUTTON)
+#include "esphome/components/button/button.h"
+#endif
+#include "esphome/components/text_sensor/text_sensor.h"
+#include "esphome/components/uart/uart.h"
+#include "esphome/components/time/real_time_clock.h"
+
+#include "daikin_ekhhe_const.h"
 
 namespace esphome {
 namespace daikin_ekkhe {
@@ -70,17 +76,20 @@ private:
   DaikinEkhheComponent* parent_;
 };
 
+#if DAIKIN_EKHHE_DEBUG && defined(USE_SWITCH)
 class DaikinEkhheDebugSwitch : public switch_::Switch {
-public:
+ public:
   void write_state(bool state) override;
-  void set_parent(DaikinEkhheComponent* parent) { this->parent_ = parent; }
+  void set_parent(DaikinEkhheComponent *parent) { this->parent_ = parent; }
 
-private:
-  DaikinEkhheComponent* parent_;
+ private:
+  DaikinEkhheComponent *parent_;
 };
+#endif
 
+#if DAIKIN_EKHHE_DEBUG && defined(USE_BUTTON)
 class DaikinEkhheDebugButton : public button::Button {
-public:
+ public:
   enum class Action : uint8_t {
     SAVE_SNAPSHOT,
     RESTORE_SNAPSHOT,
@@ -89,12 +98,13 @@ public:
   explicit DaikinEkhheDebugButton(Action action)
       : action_(action) {}
   void press_action() override;
-  void set_parent(DaikinEkhheComponent* parent) { this->parent_ = parent; }
+  void set_parent(DaikinEkhheComponent *parent) { this->parent_ = parent; }
 
-private:
-  DaikinEkhheComponent* parent_;
-  Action                action_;
+ private:
+  DaikinEkhheComponent *parent_;
+  Action action_;
 };
+#endif
 
 class DaikinEkhheComponent
     : public Component
@@ -117,39 +127,35 @@ public:
   void set_update_interval(int interval_ms);
 
   // Methods to register sensors, binary sensors, and numbers
-  void register_sensor(const std::string&       sensor_name,
-                       esphome::sensor::Sensor* sensor);
-  void register_binary_sensor(
-      const std::string&                    sensor_name,
-      esphome::binary_sensor::BinarySensor* binary_sensor);
-  void register_number(const std::string&       number_name,
-                       esphome::number::Number* number);
-  void register_select(const std::string& select_name, select::Select* select);
-  void register_timestamp_sensor(esphome::text_sensor::TextSensor* sensor);
-  void register_debug_text_sensor(const std::string&                sensor_name,
-                                  esphome::text_sensor::TextSensor* sensor);
-  void register_debug_sensor(const std::string&       sensor_name,
-                             esphome::sensor::Sensor* sensor);
-  void register_debug_select(DaikinEkhheDebugSelect* select);
-  void register_debug_switch(DaikinEkhheDebugSwitch* sw);
-  void register_cc_snapshot_sensor(esphome::text_sensor::TextSensor* sensor);
+  void register_sensor(const std::string &sensor_name, esphome::sensor::Sensor *sensor);
+  void register_binary_sensor(const std::string &sensor_name, esphome::binary_sensor::BinarySensor *binary_sensor);
+  void register_number(const std::string &number_name, esphome::number::Number *number);
+  void register_select(const std::string &select_name, select::Select *select);
+  void register_timestamp_sensor(esphome::text_sensor::TextSensor *sensor);
+  void register_debug_text_sensor(const std::string &sensor_name, esphome::text_sensor::TextSensor *sensor);
+  void register_debug_sensor(const std::string &sensor_name, esphome::sensor::Sensor *sensor);
+  void register_debug_select(DaikinEkhheDebugSelect *select);
+#if DAIKIN_EKHHE_DEBUG && defined(USE_SWITCH)
+  void register_debug_switch(DaikinEkhheDebugSwitch *sw);
+#endif
+  void register_cc_snapshot_sensor(esphome::text_sensor::TextSensor *sensor);
 
   // Methods to update values dynamically (only for registered components)
-  void set_sensor_value(const std::string& sensor_name, float value);
-  void set_binary_sensor_value(const std::string& sensor_name, bool value);
-  void set_number_value(const std::string& number_name, float value);
-  void set_select_value(const std::string& select_name, int value);
+  void set_sensor_value(const std::string &sensor_name, float value);
+  void set_binary_sensor_value(const std::string &sensor_name, bool value);
+  void set_number_value(const std::string &number_name, float value);
+  void set_select_value(const std::string &select_name, int value);
   void update_timestamp(uint8_t hour, uint8_t minute);
 
   // Allow UART command sending for Number/Select control
   void send_uart_cc_command(uint8_t index, uint8_t value, uint8_t bit_position);
   void save_cc_snapshot();
   void restore_cc_snapshot();
-  void set_debug_packet(const std::string& value);
+  void set_debug_packet(const std::string &value);
   void set_debug_freeze(bool enabled);
-  void update_number_cache(const std::string& number_name, float value);
-  void update_select_cache(const std::string& select_name,
-                           const std::string& value);
+  void update_number_cache(const std::string &number_name, float value);
+  void update_select_cache(const std::string &select_name, const std::string &value);
+
 
   enum EkkheDDPacket {
     DD_PACKET_START_IDX = 0,
@@ -308,44 +314,43 @@ public:
     CD_PACKET_SIZE      = 71,
   };
 
-private:
-  static constexpr float    kFloatPublishEpsilon             = 0.5f;
-  static constexpr uint32_t kFastPublishMinIntervalMs        = 1000;
-  static constexpr uint32_t kSlowPublishRefreshMs            = 30 * 60 * 1000;
-  static constexpr uint32_t kTimestampRefreshMs              = 5 * 60 * 1000;
-  static constexpr uint32_t kCycleTimeoutMs                  = 2000;
-  static constexpr uint32_t kFrameReadTimeoutMs              = 120;
-  static constexpr uint32_t kCycleOverBudgetMs               = 2000;
-  static constexpr uint32_t kDebugTextPublishMinIntervalMs   = 1000;
-  static constexpr uint32_t kDebugCounterPublishIntervalMs   = 30000;
+ private:
+  static constexpr float kFloatPublishEpsilon = 0.5f;
+  static constexpr uint32_t kFastPublishMinIntervalMs = 1000;
+  static constexpr uint32_t kSlowPublishRefreshMs = 30 * 60 * 1000;
+  static constexpr uint32_t kTimestampRefreshMs = 5 * 60 * 1000;
+  static constexpr uint32_t kCycleTimeoutMs = 2000;
+  static constexpr uint32_t kFrameReadTimeoutMs = 120;
+  static constexpr uint32_t kCycleOverBudgetMs = 2000;
+  static constexpr uint32_t kDebugTextPublishMinIntervalMs = 1000;
+  static constexpr uint32_t kDebugCounterPublishIntervalMs = 30000;
   static constexpr uint32_t kDebugTimingPublishMinIntervalMs = 1000;
-  static constexpr size_t   kRawFrameMaxLen                  = 71;
-  static constexpr size_t   kRawFrameBufferSize              = 16;
-  static constexpr uint8_t  kBitPositionNoBitmask            = 255;
+  static constexpr size_t kRawFrameMaxLen = 71;
+  static constexpr size_t kRawFrameBufferSize = 16;
+  static constexpr uint8_t kBitPositionNoBitmask = 255;
 
-  static constexpr uint8_t kPacketMaskDD       = 1 << 0;
-  static constexpr uint8_t kPacketMaskD2       = 1 << 1;
-  static constexpr uint8_t kPacketMaskD4       = 1 << 2;
-  static constexpr uint8_t kPacketMaskC1       = 1 << 3;
-  static constexpr uint8_t kPacketMaskCC       = 1 << 4;
-  static constexpr uint8_t kRequiredPacketMask = kPacketMaskDD | kPacketMaskD2
-                                                 | kPacketMaskD4 | kPacketMaskC1
-                                                 | kPacketMaskCC;
-  static constexpr uint8_t kChecksumPacketMask =
-      kPacketMaskDD | kPacketMaskD4 | kPacketMaskC1 | kPacketMaskCC;
+  static constexpr uint8_t kPacketMaskDD = 1 << 0;
+  static constexpr uint8_t kPacketMaskD2 = 1 << 1;
+  static constexpr uint8_t kPacketMaskD4 = 1 << 2;
+  static constexpr uint8_t kPacketMaskC1 = 1 << 3;
+  static constexpr uint8_t kPacketMaskCC = 1 << 4;
+  static constexpr uint8_t kRequiredPacketMask = kPacketMaskDD | kPacketMaskD2 | kPacketMaskD4 | kPacketMaskC1 | kPacketMaskCC;
+  static constexpr uint8_t kChecksumPacketMask = kPacketMaskDD | kPacketMaskD4 | kPacketMaskC1 | kPacketMaskCC;
 
   // variables for sensors etc.
-  std::map<std::string, esphome::sensor::Sensor*>              sensors_;
-  std::map<std::string, esphome::binary_sensor::BinarySensor*> binary_sensors_;
-  std::map<std::string, esphome::number::Number*>              numbers_;
-  std::map<std::string, DaikinEkhheSelect*>                    selects_;
-  text_sensor::TextSensor* timestamp_sensor_ = nullptr;
-  std::map<std::string, esphome::text_sensor::TextSensor*> debug_text_sensors_;
-  std::map<std::string, esphome::sensor::Sensor*>          debug_sensors_;
-  DaikinEkhheDebugSelect*       debug_packet_select_ = nullptr;
-  DaikinEkhheDebugSwitch*       debug_freeze_switch_ = nullptr;
-  text_sensor::TextSensor*      cc_snapshot_sensor_  = nullptr;
-  esphome::time::RealTimeClock* clock;
+  std::map<std::string, esphome::sensor::Sensor *> sensors_;
+  std::map<std::string, esphome::binary_sensor::BinarySensor *> binary_sensors_;
+  std::map<std::string, esphome::number::Number *> numbers_;
+  std::map<std::string, DaikinEkhheSelect *> selects_;
+  text_sensor::TextSensor *timestamp_sensor_ = nullptr;
+  std::map<std::string, esphome::text_sensor::TextSensor *> debug_text_sensors_;
+  std::map<std::string, esphome::sensor::Sensor *> debug_sensors_;
+  DaikinEkhheDebugSelect *debug_packet_select_ = nullptr;
+#if DAIKIN_EKHHE_DEBUG && defined(USE_SWITCH)
+  DaikinEkhheDebugSwitch *debug_freeze_switch_ = nullptr;
+#endif
+  text_sensor::TextSensor *cc_snapshot_sensor_ = nullptr;
+  esphome::time::RealTimeClock *clock;
 
   // UART Processing
   uint8_t ekhhe_checksum(const std::vector<uint8_t>& data_bytes);
@@ -417,12 +422,9 @@ private:
       is_known_offset_(uint8_t packet_type, size_t offset, size_t length) const;
   uint8_t     packet_type_from_string_(const std::string& value) const;
   std::string packet_type_to_string_(uint8_t packet_type) const;
-  void        send_uart_cc_packet_(const std::vector<uint8_t>& base_packet,
-                                   bool                        apply_change,
-                                   uint8_t                     index,
-                                   uint8_t                     value,
-                                   uint8_t                     bit_position);
-  void        check_pending_tx_(const std::vector<uint8_t>& buffer);
+  void send_uart_cc_packet_(const std::vector<uint8_t> &base_packet, bool apply_change,
+                            uint8_t index, uint8_t value, uint8_t bit_position);
+  void check_pending_tx_(const std::vector<uint8_t> &buffer);
 
   std::vector<uint8_t> last_d2_packet_;
   std::vector<uint8_t> last_dd_packet_;
@@ -438,36 +440,36 @@ private:
   unsigned long         last_rx_time_ = 0;
   static constexpr bool debug_mode_   = DAIKIN_EKHHE_DEBUG;
 
-  uint32_t cycle_start_ms_            = 0;
-  uint32_t cycle_bytes_read_          = 0;
-  uint32_t cycle_packets_seen_        = 0;
-  uint32_t cycle_packets_parsed_      = 0;
-  uint32_t cycle_parse_ms_            = 0;
-  uint32_t cycle_total_ms_            = 0;
-  uint32_t cycle_over_budget_total_   = 0;
-  uint32_t cycle_timeouts_            = 0;
-  uint32_t cycle_checksum_errors_     = 0;
-  uint8_t  cycle_checksum_error_mask_ = 0;
-  uint32_t cycle_framing_errors_      = 0;
-  uint8_t  cycle_framing_error_start_ = 0;
-  uint8_t  cycle_packet_types_seen_   = 0;
-  bool     cycle_timeout_logged_      = false;
-  bool     cycle_publish_allowed_     = true;
-  bool     cycle_synced_              = false;
-  uint32_t debug_frozen_seq_          = 0;
-  bool     debug_freeze_              = false;
-  uint8_t  debug_packet_type_         = 0;
-  bool     cc_snapshot_valid_         = false;
-  uint8_t  cc_snapshot_len_           = 0;
-  uint8_t  cc_snapshot_data_[kRawFrameMaxLen];
+  uint32_t cycle_start_ms_ = 0;
+  uint32_t cycle_bytes_read_ = 0;
+  uint32_t cycle_packets_seen_ = 0;
+  uint32_t cycle_packets_parsed_ = 0;
+  uint32_t cycle_parse_ms_ = 0;
+  uint32_t cycle_total_ms_ = 0;
+  uint32_t cycle_over_budget_total_ = 0;
+  uint32_t cycle_timeouts_ = 0;
+  uint32_t cycle_checksum_errors_ = 0;
+  uint8_t cycle_checksum_error_mask_ = 0;
+  uint32_t cycle_framing_errors_ = 0;
+  uint8_t cycle_framing_error_start_ = 0;
+  uint8_t cycle_packet_types_seen_ = 0;
+  bool cycle_timeout_logged_ = false;
+  bool cycle_publish_allowed_ = true;
+  bool cycle_synced_ = false;
+  uint32_t debug_frozen_seq_ = 0;
+  bool debug_freeze_ = false;
+  uint8_t debug_packet_type_ = 0;
+  bool cc_snapshot_valid_ = false;
+  uint8_t cc_snapshot_len_ = 0;
+  uint8_t cc_snapshot_data_[kRawFrameMaxLen];
   uint32_t cc_snapshot_ts_ms_ = 0;
 
   struct PendingTx {
-    bool    active       = false;
-    uint8_t index        = 0;
-    uint8_t value        = 0;
+    bool active = false;
+    uint8_t index = 0;
+    uint8_t value = 0;
     uint8_t bit_position = kBitPositionNoBitmask;
-    uint8_t cycles_left  = 0;
+    uint8_t cycles_left = 0;
   };
   PendingTx pending_tx_;
 
@@ -506,11 +508,11 @@ private:
   std::map<std::string, bool>        last_published_binary_values_;
   std::map<std::string, uint32_t>    last_published_binary_ms_;
   std::map<std::string, std::string> last_published_select_values_;
-  std::map<std::string, uint32_t>    last_published_select_ms_;
-  std::string                        last_published_timestamp_;
-  uint32_t                           last_published_timestamp_ms_ = 0;
-  std::map<std::string, float>       debug_last_published_values_;
-  std::map<std::string, uint32_t>    debug_last_published_values_ms_;
+  std::map<std::string, uint32_t> last_published_select_ms_;
+  std::string last_published_timestamp_;
+  uint32_t last_published_timestamp_ms_ = 0;
+  std::map<std::string, float> debug_last_published_values_;
+  std::map<std::string, uint32_t> debug_last_published_values_ms_;
   std::map<std::string, std::string> debug_last_published_text_;
   std::map<std::string, uint32_t>    debug_last_published_text_ms_;
 
